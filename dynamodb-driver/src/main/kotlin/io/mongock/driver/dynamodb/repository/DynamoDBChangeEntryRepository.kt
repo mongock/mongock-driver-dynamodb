@@ -19,6 +19,7 @@ import io.mongock.driver.api.entry.ChangeEntry.KEY_AUTHOR
 import io.mongock.driver.api.entry.ChangeEntry.KEY_CHANGELOG_CLASS
 import io.mongock.driver.api.entry.ChangeEntry.KEY_CHANGESET_METHOD
 import io.mongock.driver.api.entry.ChangeEntry.KEY_CHANGE_ID
+import io.mongock.driver.api.entry.ChangeEntry.KEY_ERROR_TRACE
 import io.mongock.driver.api.entry.ChangeEntry.KEY_EXECUTION_HOST_NAME
 import io.mongock.driver.api.entry.ChangeEntry.KEY_EXECUTION_ID
 import io.mongock.driver.api.entry.ChangeEntry.KEY_EXECUTION_MILLIS
@@ -31,14 +32,18 @@ import io.mongock.driver.api.entry.ChangeState
 import io.mongock.driver.api.entry.ChangeType
 import mu.KotlinLogging
 import java.util.*
-import kotlin.collections.HashMap
 
 
 internal const val RANGE_KEY_ID = "${KEY_EXECUTION_ID}#${KEY_AUTHOR}"
 private val gson = Gson()
 private val logger = KotlinLogging.logger {}
 
-class DynamoDBChangeEntryRepository(client: AmazonDynamoDBClient, tableName: String, indexCreation: Boolean, provisionedThroughput: ProvisionedThroughput?) :
+class DynamoDBChangeEntryRepository(
+    client: AmazonDynamoDBClient,
+    tableName: String,
+    indexCreation: Boolean,
+    provisionedThroughput: ProvisionedThroughput?
+) :
     DynamoDbRepositoryBase(client, tableName, ChangeEntryDynamoDB::class, indexCreation, provisionedThroughput),
     ChangeEntryService {
 
@@ -105,8 +110,9 @@ internal class ChangeEntryDynamoDB private constructor(
     @DynamoDBAttribute(attributeName = KEY_EXECUTION_HOST_NAME)
     var executionHostname: String?,
     @DynamoDBAttribute(attributeName = KEY_METADATA)
-    var metadata: String?
-
+    var metadata: String?,
+    @DynamoDBAttribute(attributeName = KEY_ERROR_TRACE)
+    var errorTrace: String?
 ) {
     internal val item: Item
         get() {
@@ -124,6 +130,7 @@ internal class ChangeEntryDynamoDB private constructor(
                 .withNumber(KEY_EXECUTION_MILLIS, executionMillis)
                 .withString(KEY_EXECUTION_HOST_NAME, executionHostname)
                 .withString(KEY_METADATA, metadata)
+                .withString(KEY_ERROR_TRACE, errorTrace)
         }
 
     internal val changeEntry: ChangeEntry
@@ -139,7 +146,8 @@ internal class ChangeEntryDynamoDB private constructor(
                 changeSetMethod,
                 executionMillis ?: 0L,
                 executionHostname,
-                if (metadata != null) gson.fromJson(metadata, Map::class.java) else Unit
+                if (metadata != null) gson.fromJson(metadata, Map::class.java) else Unit,
+                errorTrace
             )
         }
 
@@ -164,6 +172,9 @@ internal class ChangeEntryDynamoDB private constructor(
             if (metadata != null && metadata != "") {
                 attributes[KEY_METADATA] = AttributeValue(metadata)
             }
+            if (errorTrace != null && errorTrace != "") {
+                attributes[KEY_ERROR_TRACE] = AttributeValue(errorTrace)
+            }
             return attributes
         }
 
@@ -180,10 +191,11 @@ internal class ChangeEntryDynamoDB private constructor(
         changeSetMethod = c.changeSetMethod,
         executionMillis = c.executionMillis,
         executionHostname = c.executionHostname ?: "",
-        metadata = if (c.metadata != null) gson.toJson(c.metadata) else ""
+        metadata = if (c.metadata != null) gson.toJson(c.metadata) else "",
+        errorTrace = c.errorTrace.orElse("")
     )
 
-    constructor() : this(null, null, null, null, null, null, null, null, null, null, null, null)
+    constructor() : this(null, null, null, null, null, null, null, null, null, null, null, null, null)
     internal constructor(item: Map<String, AttributeValue>) : this(
         changeId = item[KEY_CHANGE_ID]!!.s,
         rangeKey = item[RANGE_KEY_ID]!!.s,
@@ -195,8 +207,9 @@ internal class ChangeEntryDynamoDB private constructor(
         changeLogClass = item[KEY_CHANGELOG_CLASS]!!.s,
         changeSetMethod = item[KEY_CHANGESET_METHOD]!!.s,
         executionMillis = item[KEY_EXECUTION_MILLIS]!!.n.toLong(),
-        executionHostname = item[KEY_EXECUTION_HOST_NAME]!!.s,
-        metadata = item[KEY_METADATA]!!.s
+        executionHostname = (item[KEY_EXECUTION_HOST_NAME]?.s) ?: "",
+        metadata = (item[KEY_METADATA]?.s) ?: "",
+        errorTrace = (item[KEY_ERROR_TRACE]?.s) ?: ""
     )
 
 }

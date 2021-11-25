@@ -1,7 +1,7 @@
 package io.mongock.driver.dynamodb.driver
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient
-import com.amazonaws.services.dynamodbv2.datamodeling.TransactionWriteRequest
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput
 import com.amazonaws.services.dynamodbv2.model.ReturnConsumedCapacity
 import com.amazonaws.services.dynamodbv2.model.TransactWriteItemsRequest
@@ -16,7 +16,6 @@ import io.mongock.driver.dynamodb.repository.DynamoDBLockRepository
 import io.mongock.driver.dynamodb.repository.DynamoDBTransactionItems
 import mu.KotlinLogging
 import java.util.*
-import kotlin.collections.HashSet
 
 
 private val logger = KotlinLogging.logger {}
@@ -40,7 +39,6 @@ abstract class DynamoDBDriverBase protected constructor(
             indexCreation,
             provisionedThroughput
         )
-
     }
     private val _lockRepository: DynamoDBLockRepository by lazy {
         DynamoDBLockRepository(
@@ -75,13 +73,21 @@ abstract class DynamoDBDriverBase protected constructor(
 
 
     override fun getDependencies(): Set<ChangeSetDependency> {
+       val currentTransactionItemsOpt =  _dependencies.stream()
+            .filter { it.type == DynamoDBTransactionItems::class.java}
+            .findAny()
+        if(currentTransactionItemsOpt.isPresent) {
+            _dependencies.remove(currentTransactionItemsOpt.get());
+        }
+
         if (transactionItems != null) {
-            val transactionReqDependency =
-                ChangeSetDependency(DynamoDBTransactionItems::class.java, transactionItems, true)
-            _dependencies.remove(transactionReqDependency)
-            _dependencies.add(transactionReqDependency)
+            _dependencies.add(ChangeSetDependency(DynamoDBTransactionItems::class.java, transactionItems, true))
         }
         return _dependencies;
+    }
+
+    override fun getNonProxyableTypes(): List<Class<*>> {
+        return listOf(DynamoDBMapper::class.java, DynamoDBTransactionItems::class.java)
     }
 
     //TODO potentially removable(move it to executeInTransaction)

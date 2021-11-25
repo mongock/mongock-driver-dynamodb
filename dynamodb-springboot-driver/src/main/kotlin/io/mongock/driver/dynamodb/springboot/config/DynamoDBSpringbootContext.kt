@@ -12,7 +12,7 @@ class DynamoDBSpringbootContext {
     fun connectionDriver(
         client: AmazonDynamoDBClient,
         mongockConfig: MongockConfiguration,
-        dynamoDBConfig: DynamoDBConfiguration
+        dynamoDBConfig: DynamoDBConfiguration?
     ): ConnectionDriver {
         val driver = DynamoDBDriver.withLockStrategy(
             client,

@@ -1,42 +1,12 @@
 package io.mongock.driver.dynamodb.util
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider
-import com.amazonaws.auth.BasicAWSCredentials
-import com.amazonaws.client.builder.AwsClientBuilder
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig
-import com.amazonaws.services.dynamodbv2.document.DynamoDB
-import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec
-import com.amazonaws.services.dynamodbv2.model.AttributeValue
-import com.amazonaws.services.dynamodbv2.model.GetItemRequest
-import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput
-import com.amazonaws.services.dynamodbv2.model.PutItemRequest
-import com.amazonaws.services.dynamodbv2.model.QueryRequest
-import com.amazonaws.services.dynamodbv2.model.Select
-import com.amazonaws.services.dynamodbv2.util.TableUtils
 import io.kotest.core.spec.style.scopes.DescribeSpecContainerContext
 import io.kotest.core.test.TestContext
 import io.mongock.driver.api.driver.ConnectionDriver
 import io.mongock.driver.api.entry.ChangeEntry
-import io.mongock.driver.api.entry.ChangeEntry.KEY_CHANGE_ID
 import io.mongock.driver.api.entry.ChangeEntryService
-import io.mongock.driver.api.entry.ChangeState
-import io.mongock.driver.api.entry.ChangeType
 import io.mongock.driver.core.lock.LockEntry
 import io.mongock.driver.core.lock.LockRepository
-import io.mongock.driver.core.lock.LockStatus
-import io.mongock.driver.dynamodb.driver.DynamoDBDriver
-import io.mongock.driver.dynamodb.repository.ChangeEntryDynamoDB
-import io.mongock.driver.dynamodb.repository.DynamoDBChangeEntryRepository
-import io.mongock.driver.dynamodb.repository.DynamoDBLockRepository
-import io.mongock.driver.dynamodb.repository.KEY_FIELD_DYNAMODB
-import io.mongock.driver.dynamodb.repository.LockEntryDynamoDB
-import io.mongock.driver.dynamodb.repository.RANGE_KEY_ID
-import org.testcontainers.dynamodb.DynaliteContainer
-import org.testcontainers.utility.DockerImageName
-import java.util.*
 
 
 interface TestCompanion<in REPO_EXTRA_CONFIG> {

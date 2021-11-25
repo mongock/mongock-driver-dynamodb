@@ -3,13 +3,11 @@
   <parent>
     <artifactId>mongock-driver-dynamodb</artifactId>
     <groupId>io.mongock</groupId>
-    <version>5.0.25-SNAPSHOT</version>
+    <version>5.0.26.BETA-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>mongock-driver-dynamodb-bom</artifactId>
 
-
-  <version>5.0.25.BETA-SNAPSHOT</version>
   <name>Mongock DynamoDB BOM</name>
   <description>Mongock for DynamoDB dependency management</description>
   <packaging>pom</packaging>
@@ -30,7 +28,7 @@
       <dependency>
         <groupId>io.mongock</groupId>
         <artifactId>mongock-core-bom</artifactId>
-        <version>${parent.version}</version>
+        <version>${mongock.community.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>

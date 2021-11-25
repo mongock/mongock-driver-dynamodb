@@ -8,16 +8,11 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig
 import com.amazonaws.services.dynamodbv2.document.DynamoDB
-import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec
 import com.amazonaws.services.dynamodbv2.model.AttributeValue
 import com.amazonaws.services.dynamodbv2.model.GetItemRequest
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput
 import com.amazonaws.services.dynamodbv2.model.PutItemRequest
-import com.amazonaws.services.dynamodbv2.model.QueryRequest
-import com.amazonaws.services.dynamodbv2.model.Select
 import com.amazonaws.services.dynamodbv2.util.TableUtils
-import io.kotest.core.spec.style.scopes.DescribeSpecContainerContext
-import io.kotest.core.test.TestContext
 import io.mongock.driver.api.driver.ConnectionDriver
 import io.mongock.driver.api.entry.ChangeEntry
 import io.mongock.driver.api.entry.ChangeEntry.KEY_CHANGE_ID
