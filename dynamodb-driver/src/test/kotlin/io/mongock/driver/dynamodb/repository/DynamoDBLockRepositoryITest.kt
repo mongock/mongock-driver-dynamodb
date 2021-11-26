@@ -111,7 +111,7 @@ class DynamoDBLockRepositoryITest : DescribeSpec({
         When("LockEntry table is empty", { companion.createLockTable("lock-t-save-4") }) {
             should("not allow  to updateIfSameOwner") {
                 val repo = companion.getLockRepository("lock-t-save-4", true, repoExtraConfig)
-                val message = shouldThrow<LockPersistenceException> {
+                shouldThrow<LockPersistenceException> {
                     repo.updateIfSameOwner(lockOwner1NotExpired)
                 }
             }
@@ -119,7 +119,7 @@ class DynamoDBLockRepositoryITest : DescribeSpec({
         When("owner-1 has expired lock in table", { companion.createInsert("lock-t-save-5", lockOwner1Expired) }) {
             should("not allow other owner to updateIfSameOwner") {
                 val repo = companion.getLockRepository("lock-t-save-5", true, repoExtraConfig)
-                val message = shouldThrow<LockPersistenceException> {
+                shouldThrow<LockPersistenceException> {
                     repo.updateIfSameOwner(lockOwner2NotExpired)
                 }
             }
