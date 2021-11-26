@@ -157,32 +157,27 @@
       <plugin>
         <groupId>org.jetbrains.dokka</groupId>
         <artifactId>dokka-maven-plugin</artifactId>
-        <version>${dokka.version}</version>
         <executions>
           <execution>
-            <phase>pre-site</phase>
+            <phase>package</phase>
+            <id>attach-javadocs-dokka</id>
             <goals>
-              <goal>dokka</goal>
+              <goal>javadocJar</goal>
             </goals>
           </execution>
         </executions>
-        <configuration>
-          <dokkaPlugins>
-            <plugin>
-              <groupId>org.jetbrains.dokka</groupId>
-              <artifactId>kotlin-as-java-plugin</artifactId>
-              <version>${dokka.version}</version>
-            </plugin>
-          </dokkaPlugins>
-        </configuration>
       </plugin>
-
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>2.6</version>
-        <configuration>
-        </configuration>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <id>attach-javadocs-javadoc</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
 
     </plugins>

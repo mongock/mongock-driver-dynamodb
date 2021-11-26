@@ -152,30 +152,39 @@
             <configuration>
             </configuration>
           </execution>
+          <execution>
+            <id>test-compile</id>
+            <goals>
+              <goal>test-compile</goal>
+            </goals>
+            <configuration>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
 
-
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>2.6</version>
-        <configuration>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.1.1</version>
+        <groupId>org.jetbrains.dokka</groupId>
+        <artifactId>dokka-maven-plugin</artifactId>
         <executions>
           <execution>
-            <id>attach-javadocs</id>
+            <phase>package</phase>
+            <id>attach-javadocs-dokka</id>
+            <goals>
+              <goal>javadocJar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <id>attach-javadocs-javadoc</id>
             <goals>
               <goal>jar</goal>
             </goals>
-            <configuration> <!-- add this to disable checking -->
-              <additionalJOption>-Xdoclint:none</additionalJOption>
-            </configuration>
           </execution>
         </executions>
       </plugin>
