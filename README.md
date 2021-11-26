@@ -7,4 +7,4 @@ Mongock Driver for DynamoDB
 <br />
 <p align="center" >
 
-### Visit [the official documentation](https://www.mongock.io/dynamodb) to get started
+### Visit the official [documentation](https://www.mongock.io/dynamodb) to get started
