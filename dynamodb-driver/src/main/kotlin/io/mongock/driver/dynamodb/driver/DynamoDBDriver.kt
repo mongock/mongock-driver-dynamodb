@@ -7,7 +7,7 @@ private const val LOCK_ACQUIRE_FOR_MILLIS = 60 * 1000L
 private const val LOCK_QUIT_TRYING_AFTER_MILLIS = 60 * 1000L
 private const val LOCK_TRY_FREQUENCY_MILLIS = 60 * 1000L
 
-class DynamoDBDriver constructor(
+class DynamoDBDriver private constructor(
     client: AmazonDynamoDBClient,
     lockAcquiredForMillis: Long,
     lockQuitTryingAfterMillis: Long,
