@@ -41,7 +41,7 @@ class DynamoDBDriverITest : DescribeSpec({
                     driver.initialize()
                     driver.prepareForExecutionBlock()
                     val changeEntryService = driver.changeEntryService
-                    val ex = shouldThrow<MongockException> {
+                    shouldThrow<MongockException> {
                         driver.transactioner.get().executeInTransaction {
                             changeEntryService.saveOrUpdate(change1)
                             changeEntryService.saveOrUpdate(change2)

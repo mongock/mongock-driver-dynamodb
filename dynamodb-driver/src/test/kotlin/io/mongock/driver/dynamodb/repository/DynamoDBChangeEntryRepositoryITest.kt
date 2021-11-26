@@ -40,7 +40,7 @@ class DynamoDBChangeEntryRepositoryITest : DescribeSpec({
             }
             and("indexCreation == true") {
                 should("create table/collection") {
-                    val changeService = companion.getChangeService("for-initialize-2", true, repoExtraConfig).initialize()
+                    companion.getChangeService("for-initialize-2", true, repoExtraConfig).initialize()
                     companion.checkTableIsCreated("for-initialize-2")
                 }
             }
