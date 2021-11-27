@@ -7,12 +7,13 @@ import io.mongock.driver.dynamodb.driver.DynamoDBDriver
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Import
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 
 @Configuration
-@Import(DynamoDBConfiguration::class)
+@EnableConfigurationProperties(DynamoDBConfiguration::class)
 @ConditionalOnExpression("\${mongock.enabled:true}")
+@EnableConfigurationProperties(DynamoDBConfiguration::class)
 open class DynamoDBSpringbootContext {
 
     @Bean
