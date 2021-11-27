@@ -11,7 +11,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 
 @Configuration
-@EnableConfigurationProperties(DynamoDBConfiguration::class)
 @ConditionalOnExpression("\${mongock.enabled:true}")
 @EnableConfigurationProperties(DynamoDBConfiguration::class)
 open class DynamoDBSpringbootContext {
