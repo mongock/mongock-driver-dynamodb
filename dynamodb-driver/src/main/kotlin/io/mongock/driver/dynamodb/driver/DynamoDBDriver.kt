@@ -40,4 +40,5 @@ class DynamoDBDriver private constructor(
             )
         }
     }
+
 }

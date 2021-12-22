@@ -53,6 +53,13 @@ abstract class DynamoDBDriverBase protected constructor(
 
     private var transactionEnabled = true
 
+    override fun disableTransaction() {
+        transactionEnabled = false
+    }
+
+    override fun enableTransaction() {
+        transactionEnabled = true
+    }
 
     override fun getLockRepository(): LockRepository {
         return _lockRepository
@@ -62,9 +69,6 @@ abstract class DynamoDBDriverBase protected constructor(
         return _changeEntryService
     }
 
-    fun disableTransaction() {
-        transactionEnabled = false
-    }
 
 
     override fun getTransactioner(): Optional<Transactioner> {
