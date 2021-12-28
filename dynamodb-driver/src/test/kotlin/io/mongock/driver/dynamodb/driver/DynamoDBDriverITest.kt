@@ -23,7 +23,7 @@ class DynamoDBDriverITest : DescribeSpec({
         context("transactions") {
             should("execute the transaction successfully") {
                 val driver = companion.getDriver()
-                driver.migrationRepositoryName = "driver-transaction-1"
+                driver.setMigrationRepositoryName("driver-transaction-1")
                 driver.initialize()
                 driver.prepareForExecutionBlock()
                 val changeEntryService = driver.changeEntryService
@@ -31,13 +31,13 @@ class DynamoDBDriverITest : DescribeSpec({
                     changeEntryService.saveOrUpdate(change1)
                     changeEntryService.saveOrUpdate(change2)
                 }
-                companion.isInserted(driver.migrationRepositoryName, change1) shouldBe true
-                companion.isInserted(driver.migrationRepositoryName, change2) shouldBe true
+                companion.isInserted(driver.getMigrationRepositoryNameForTest(), change1) shouldBe true
+                companion.isInserted(driver.getMigrationRepositoryNameForTest(), change2) shouldBe true
             }
             When("one item fails") {
                 should("rollback") {
                     val driver = companion.getDriver()
-                    driver.migrationRepositoryName = "driver-transaction-rollback"
+                    driver.setMigrationRepositoryName("driver-transaction-rollback")
                     driver.initialize()
                     driver.prepareForExecutionBlock()
                     val changeEntryService = driver.changeEntryService
@@ -48,13 +48,13 @@ class DynamoDBDriverITest : DescribeSpec({
                             changeEntryService.saveOrUpdate(changeFailed)
                         }
                     }
-                    companion.isInserted(driver.migrationRepositoryName, change1) shouldBe false
-                    companion.isInserted(driver.migrationRepositoryName, change2) shouldBe false
+                    companion.isInserted(driver.getMigrationRepositoryNameForTest(), change1) shouldBe false
+                    companion.isInserted(driver.getMigrationRepositoryNameForTest(), change2) shouldBe false
                 }
             }
             should("be able to execute 25 writetransaction items") {
                 val driver = companion.getDriver()
-                driver.migrationRepositoryName = "driver-transaction-25-items"
+                driver.setMigrationRepositoryName("driver-transaction-25-items")
                 driver.initialize()
                 driver.prepareForExecutionBlock()
                 val changeEntryService = driver.changeEntryService
@@ -67,7 +67,7 @@ class DynamoDBDriverITest : DescribeSpec({
                         changeEntryService.saveOrUpdate(changeEntry)
                     }
                 }
-                listAdded.forEach { companion.isInserted(driver.migrationRepositoryName, it) shouldBe true }
+                listAdded.forEach { companion.isInserted(driver.getMigrationRepositoryNameForTest(), it) shouldBe true }
 
             }
         }

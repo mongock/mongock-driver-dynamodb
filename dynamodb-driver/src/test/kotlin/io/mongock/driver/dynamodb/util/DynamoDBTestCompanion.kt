@@ -19,6 +19,7 @@ import io.mongock.driver.api.entry.ChangeEntry.KEY_CHANGE_ID
 import io.mongock.driver.api.entry.ChangeEntryService
 import io.mongock.driver.api.entry.ChangeState
 import io.mongock.driver.api.entry.ChangeType
+import io.mongock.driver.core.driver.ConnectionDriverBase
 import io.mongock.driver.core.lock.LockEntry
 import io.mongock.driver.core.lock.LockRepository
 import io.mongock.driver.core.lock.LockStatus
@@ -32,6 +33,7 @@ import io.mongock.driver.dynamodb.repository.RANGE_KEY_ID
 import org.testcontainers.dynamodb.DynaliteContainer
 import org.testcontainers.utility.DockerImageName
 import java.util.*
+
 
 
 class DynamoDBTestCompanion: TestCompanion<ProvisionedThroughput> {
@@ -183,12 +185,13 @@ class DynamoDBTestCompanion: TestCompanion<ProvisionedThroughput> {
         insertLockEntries(tableName, *entries)
     }
 
-    override fun getDriver(): ConnectionDriver {
-        return DynamoDBDriver.withDefaultLock(client!!)
+    override fun getDriver(): TestDynamoDBDriver {
+        return TestDynamoDBDriver.withDefaultLock(client!!)
     }
-
-
 }
+
+
+
 
 val repoExtraConfig: ProvisionedThroughput = ProvisionedThroughput(50L, 50L)
 
