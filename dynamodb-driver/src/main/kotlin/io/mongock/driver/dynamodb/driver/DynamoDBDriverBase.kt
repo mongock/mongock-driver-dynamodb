@@ -7,9 +7,10 @@ import com.amazonaws.services.dynamodbv2.model.ReturnConsumedCapacity
 import com.amazonaws.services.dynamodbv2.model.TransactWriteItemsRequest
 import io.mongock.api.exception.MongockException
 import io.mongock.driver.api.driver.ChangeSetDependency
-import io.mongock.driver.api.driver.Transactioner
+import io.mongock.driver.api.driver.Transactional
 import io.mongock.driver.api.entry.ChangeEntryService
 import io.mongock.driver.core.driver.ConnectionDriverBase
+import io.mongock.driver.core.driver.TransactionalConnectionDriverBase
 import io.mongock.driver.core.lock.LockRepository
 import io.mongock.driver.dynamodb.repository.DynamoDBChangeEntryRepository
 import io.mongock.driver.dynamodb.repository.DynamoDBLockRepository
@@ -26,8 +27,8 @@ abstract class DynamoDBDriverBase protected constructor(
     lockQuitTryingAfterMillis: Long,
     lockTryFrequencyMillis: Long
 ) :
-    ConnectionDriverBase(lockAcquiredForMillis, lockQuitTryingAfterMillis, lockTryFrequencyMillis),
-    Transactioner {
+    TransactionalConnectionDriverBase(lockAcquiredForMillis, lockQuitTryingAfterMillis, lockTryFrequencyMillis),
+    Transactional {
 
     var provisionedThroughput: ProvisionedThroughput? = ProvisionedThroughput(50L, 50L)
 
@@ -51,15 +52,7 @@ abstract class DynamoDBDriverBase protected constructor(
 
     private var transactionItems: DynamoDBTransactionItems? = null
 
-    private var transactionEnabled = true
 
-    override fun disableTransaction() {
-        transactionEnabled = false
-    }
-
-    override fun enableTransaction() {
-        transactionEnabled = true
-    }
 
     override fun getLockRepository(): LockRepository {
         return _lockRepository
@@ -71,7 +64,7 @@ abstract class DynamoDBDriverBase protected constructor(
 
 
 
-    override fun getTransactioner(): Optional<Transactioner> {
+    override fun getTransactioner(): Optional<Transactional> {
         return Optional.ofNullable(if (transactionEnabled) this else null)
     }
 
@@ -119,9 +112,5 @@ abstract class DynamoDBDriverBase protected constructor(
             transactionItems = null
             removeDependencyIfAssignableFrom(_dependencies, DynamoDBTransactionItems::class.java)
         }
-    }
-
-    override fun getLegacyMigrationChangeLogClass(runAlways: Boolean): Class<*> {
-        throw NotImplementedError("Legacy migration not provided for DynamoDB")
     }
 }
