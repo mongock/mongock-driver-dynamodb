@@ -36,7 +36,7 @@ abstract class DynamoDBDriverBase protected constructor(
     private val _changeEntryService: DynamoDBChangeEntryRepository by lazy {
         DynamoDBChangeEntryRepository(
             client,
-            migrationRepositoryName,
+            getMigrationRepositoryName(),
             indexCreation,
             provisionedThroughput
         )
@@ -44,7 +44,7 @@ abstract class DynamoDBDriverBase protected constructor(
     private val _lockRepository: DynamoDBLockRepository by lazy {
         DynamoDBLockRepository(
             client,
-            lockRepositoryName,
+            getLockRepositoryName(),
             indexCreation,
             if(provisionedThroughput !=null) ProvisionedThroughput(1L, 1L) else null
         )
